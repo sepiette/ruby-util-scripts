@@ -9,12 +9,12 @@ require 'json'
 class ChcCsvParser
   def initialize(name)
     @file_name = name
+    @parsed_arr = []
   end
 
   def parse_csv
     csv_text = File.read("#{@file_name}")
     csv = CSV.parse(csv_text, headers: true, header_converters: :symbol, encoding: "UTF-8")
-    parsed_arr = []
     success_count = 0
     error_count = 0
     csv.each do |row|
@@ -24,7 +24,7 @@ class ChcCsvParser
         raw_response = payload["raw_response"]
         raw_response.gsub!("=\u003e", ":")
         payload["raw_response"] = JSON.parse(raw_response).to_h
-        parsed_arr << payload
+        @parsed_arr << payload
 
         puts "completed row #{success_count + 1} of #{csv.size}"
         success_count += 1
@@ -35,13 +35,13 @@ class ChcCsvParser
     end
     puts "Successfully parsed #{success_count} of #{csv.size}"
     puts "Failed on #{error_count} of #{csv.size}"
-    parsed_arr
+    @parsed_arr
   end
 
   def write_to_json
     File.open("#{@file_name}.json", 'w') do |f|
       f.write("[")
-      parsed_arr.each do |row|
+      @parsed_arr.each do |row|
         f.write("#{row.to_json},")
       end
       f.write("]")

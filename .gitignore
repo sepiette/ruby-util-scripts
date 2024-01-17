@@ -1,7 +1,11 @@
-# Data Files
+# Data Files & Directories
 *.json
 *.csv
+**/analysis/
+**/analysis/*
 
+
+.idea
 *.gem
 *.rbc
 /.config
