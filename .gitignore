@@ -1,3 +1,7 @@
+# Data Files
+*.json
+*.csv
+
 *.gem
 *.rbc
 /.config
